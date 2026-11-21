@@ -34,6 +34,43 @@ const forfaits = [
 
 app.get("/", (req, res) => {
   res.send("AFRIKI SERVICE : serveur opérationnel !");
+});app.get("/conditions", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Conditions d'utilisation - AFRIKI SERVICE</title>
+    </head>
+    <body style="font-family:Arial;max-width:800px;margin:30px auto;padding:20px;line-height:1.6">
+      <h1>AFRIKI SERVICE</h1>
+      <h2>Conditions générales d'utilisation du Wi-Fi</h2>
+
+      <p>Bienvenue sur AFRIKI SERVICE, votre service d'accès Internet Wi-Fi.</p>
+
+      <h3>1. Accès au service</h3>
+      <p>L'accès à Internet est réservé aux utilisateurs disposant d'un forfait valide.</p>
+
+      <h3>2. Paiement</h3>
+      <p>Les forfaits sont payables selon les tarifs affichés sur le portail.</p>
+
+      <h3>3. Utilisation responsable</h3>
+      <p>L'utilisateur s'engage à respecter les lois en vigueur et à ne pas utiliser le réseau pour des activités illégales.</p>
+
+      <h3>4. Sécurité</h3>
+      <p>L'utilisateur est responsable de la sécurité de son appareil et de ses identifiants de connexion.</p>
+
+      <h3>5. Disponibilité</h3>
+      <p>Le service peut être temporairement interrompu pour des raisons techniques ou de maintenance.</p>
+
+      <h3>6. Assistance</h3>
+      <p>Pour toute difficulté, veuillez contacter le responsable d'AFRIKI SERVICE.</p>
+
+      <p><strong>AFRIKI SERVICE - Sénégal</strong></p>
+    </body>
+    </html>
+  `);
 });
 
 app.get("/health", (req, res) => {
