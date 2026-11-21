@@ -5,12 +5,37 @@ const app = express();
 app.disable("x-powered-by");
 app.use(express.json({ limit: "20kb" }));
 
-// Page d'accueil
+const forfaits = [
+  {
+    id: "jour",
+    nom: "Pass 1 jour",
+    prix: 200,
+    duree: "24 heures"
+  },
+  {
+    id: "semaine",
+    nom: "Pass 1 semaine",
+    prix: 700,
+    duree: "7 jours"
+  },
+  {
+    id: "quinzaine",
+    nom: "Pass 2 semaines",
+    prix: 1200,
+    duree: "14 jours"
+  },
+  {
+    id: "mois",
+    nom: "Pass 1 mois",
+    prix: 2000,
+    duree: "30 jours"
+  }
+];
+
 app.get("/", (req, res) => {
   res.send("AFRIKI SERVICE : serveur opérationnel !");
 });
 
-// Vérification du fonctionnement du serveur
 app.get("/health", (req, res) => {
   res.json({
     service: "AFRIKI SERVICE",
@@ -19,6 +44,10 @@ app.get("/health", (req, res) => {
     paymentsEnabled: false,
     mikrotikConnected: false
   });
+});
+
+app.get("/plans", (req, res) => {
+  res.json(forfaits);
 });
 
 const PORT = process.env.PORT || 3000;
