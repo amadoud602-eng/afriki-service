@@ -34,45 +34,84 @@ const forfaits = [
 
 app.get("/", (req, res) => {
   res.send("AFRIKI SERVICE : serveur opérationnel !");
-});app.get("/conditions", (req, res) => {
+});
+app.get("/conditions", (req, res) => {
   res.send(`
     <!DOCTYPE html>
     <html lang="fr">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Conditions d'utilisation - AFRIKI SERVICE</title>
+      <title>Conditions générales - AFRIKI SERVICE</title>
+      <meta name="description" content="Conditions générales d'utilisation du service Wi-Fi AFRIKI SERVICE au Sénégal.">
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          max-width: 850px;
+          margin: 30px auto;
+          padding: 20px;
+          line-height: 1.7;
+          color: #222;
+          background: #f5f7fa;
+        }
+        main {
+          background: white;
+          padding: 25px;
+          border-radius: 12px;
+        }
+        h1, h2 { color: #075b45; }
+        h2 { margin-top: 28px; }
+      </style>
     </head>
-    <body style="font-family:Arial;max-width:800px;margin:30px auto;padding:20px;line-height:1.6">
-      <h1>AFRIKI SERVICE</h1>
-      <h2>Conditions générales d'utilisation du Wi-Fi</h2>
+    <body>
+      <main>
+        <h1>AFRIKI SERVICE</h1>
+        <h2>Conditions générales d'utilisation du Wi-Fi</h2>
 
-      <p>Bienvenue sur AFRIKI SERVICE, votre service d'accès Internet Wi-Fi.</p>
+        <p><strong>Éditeur du service :</strong> AFRIKI SERVICE</p>
+        <p><strong>Localisation :</strong> Bargny, Sénégal</p>
+        <p><strong>Contact :</strong> +221 70 674 29 74</p>
 
-      <h3>1. Accès au service</h3>
-      <p>L'accès à Internet est réservé aux utilisateurs disposant d'un forfait valide.</p>
+        <h2>1. Objet du service</h2>
+        <p>AFRIKI SERVICE propose un accès Internet sans fil (Wi-Fi) payant aux utilisateurs disposant d'un forfait valide.</p>
 
-      <h3>2. Paiement</h3>
-      <p>Les forfaits sont payables selon les tarifs affichés sur le portail.</p>
+        <h2>2. Forfaits et tarifs</h2>
+        <ul>
+          <li>Pass 1 jour (24 heures) : 200 FCFA</li>
+          <li>Pass 1 semaine (7 jours) : 700 FCFA</li>
+          <li>Pass 2 semaines (14 jours) : 1 200 FCFA</li>
+          <li>Pass 1 mois (30 jours) : 2 000 FCFA</li>
+        </ul>
 
-      <h3>3. Utilisation responsable</h3>
-      <p>L'utilisateur s'engage à respecter les lois en vigueur et à ne pas utiliser le réseau pour des activités illégales.</p>
+        <h2>3. Paiement</h2>
+        <p>Le paiement s'effectue par les moyens proposés sur le portail officiel. L'accès est accordé après confirmation du paiement.</p>
 
-      <h3>4. Sécurité</h3>
-      <p>L'utilisateur est responsable de la sécurité de son appareil et de ses identifiants de connexion.</p>
+        <h2>4. Utilisation du réseau</h2>
+        <p>L'utilisateur s'engage à respecter les lois du Sénégal et à ne pas utiliser le réseau pour des activités frauduleuses, illégales ou portant atteinte aux droits d'autrui.</p>
 
-      <h3>5. Disponibilité</h3>
-      <p>Le service peut être temporairement interrompu pour des raisons techniques ou de maintenance.</p>
+        <h2>5. Identifiants et sécurité</h2>
+        <p>L'utilisateur doit préserver la confidentialité de ses identifiants et reste responsable de leur utilisation.</p>
 
-      <h3>6. Assistance</h3>
-      <p>Pour toute difficulté, veuillez contacter le responsable d'AFRIKI SERVICE.</p>
+        <h2>6. Disponibilité du service</h2>
+        <p>Le service peut connaître des interruptions temporaires pour des raisons techniques, de maintenance ou indépendantes de notre volonté.</p>
 
-      <p><strong>AFRIKI SERVICE - Sénégal</strong></p>
+        <h2>7. Remboursement et réclamations</h2>
+        <p>Toute réclamation concernant un paiement ou un accès non fonctionnel peut être adressée à AFRIKI SERVICE au numéro indiqué ci-dessus. Les demandes sont examinées au cas par cas conformément aux règles applicables.</p>
+
+        <h2>8. Données personnelles</h2>
+        <p>Les informations nécessaires à la gestion des connexions et des paiements sont utilisées uniquement pour fournir et sécuriser le service, conformément aux règles applicables au Sénégal.</p>
+
+        <h2>9. Contact</h2>
+        <p>Pour toute question ou réclamation, contactez AFRIKI SERVICE :</p>
+        <p><strong>Téléphone : +221 70 674 29 74</strong></p>
+        <p><strong>Localisation : Bargny, Sénégal</strong></p>
+
+        <p>Dernière mise à jour : 21 novembre 2026.</p>
+      </main>
     </body>
     </html>
   `);
 });
-
 app.get("/health", (req, res) => {
   res.json({
     service: "AFRIKI SERVICE",
