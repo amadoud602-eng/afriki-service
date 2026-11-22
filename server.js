@@ -156,7 +156,69 @@ app.get("/health", (req, res) => {
 app.get("/plans", (req, res) => {
   res.json(forfaits);
 });
+app.post("/api/paiements", async (req, res) => {
+  try {
+    const { forfait, moyen } = req.body || {};
 
+    const plan = forfaits.find((p) => p.id === forfait);
+
+    if (!plan || !["wave", "orange"].includes(moyen)) {
+      return res.status(400).json({
+        erreur: "Forfait ou moyen de paiement invalide"
+      });
+    }
+
+    const apiKey = process.env.ORVLABS_API_KEY;
+    const apiUrl = process.env.ORVLABS_API_URL;
+
+    if (!apiKey || !apiKey.startsWith("sk_221_pay_test_")) {
+      return res.status(503).json({
+        erreur: "Clé de paiement de test indisponible"
+      });
+    }
+
+    const reference =
+      "AFRIKI-" + Date.now() + "-" +
+      Math.random().toString(36).slice(2, 8);
+
+    const response = await fetch(`${apiUrl}/v1/payments`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "Idempotency-Key": reference
+      },
+      body: JSON.stringify({
+        amount: String(plan.prix),
+        currency: "XOF",
+        rail: moyen === "wave" ? "sn_wave" : "sn_orange",
+        merchant_reference: reference,
+        return_url: "https://afriki-service.onrender.com/"
+      })
+    });
+
+    const resultat = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        erreur: "221 Pay n'a pas accepté la demande"
+      });
+    }
+
+    return res.json({
+      statut: resultat.status,
+      paiement: resultat.id,
+      lien: resultat.checkout_url
+    });
+
+  } catch (erreur) {
+    console.error("Erreur création paiement :", erreur.message);
+
+    return res.status(500).json({
+      erreur: "Erreur lors de la création du paiement"
+    });
+  }
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
