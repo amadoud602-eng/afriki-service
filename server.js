@@ -1,7 +1,41 @@
 const express = require("express");
 const { createHmac, timingSafeEqual } = require("crypto");
 const app = express();
+app.post("/webhooks/221", express.raw({ type: "application/json" }), (req, res) => {
+  const raw = req.body.toString("utf8");
+  const timestamp = req.get("X-221-Timestamp");
+  const signature = req.get("X-221-Signature");
+  const secret = process.env.WEBHOOK_SECRET;
 
+  if (!timestamp || !signature || !secret) {
+    return res.sendStatus(400);
+  }
+
+  const age = Math.abs(Date.now() / 1000 - Number(timestamp));
+
+  if (!Number.isFinite(age) || age > 300) {
+    return res.sendStatus(400);
+  }
+
+  const expected = "v1=" + createHmac("sha256", secret)
+    .update(`${timestamp}.${raw}`)
+    .digest("hex");
+
+  const a = Buffer.from(expected);
+  const b = Buffer.from(signature);
+
+  if (a.length !== b.length || !timingSafeEqual(a, b)) {
+    return res.sendStatus(400);
+  }
+
+  try {
+    const event = JSON.parse(raw);
+    console.log("Événement 221 Pay reçu :", event.type);
+    return res.sendStatus(200);
+  } catch {
+    return res.sendStatus(400);
+  }
+});
 const forfaits = [
   {
     id: "jour",
