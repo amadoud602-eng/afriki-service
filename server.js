@@ -36,6 +36,7 @@ app.post("/webhooks/221", express.raw({ type: "application/json" }), (req, res) 
     return res.sendStatus(400);
   }
 });
+app.use(express.json({ limit: "20kb" }));
 const forfaits = [
   {
     id: "jour",
