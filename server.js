@@ -168,8 +168,7 @@ app.post("/api/paiements", async (req, res) => {
         erreur: "Forfait ou moyen de paiement invalide"
       });
     }
-
-    const apiKey = process.env.ORVLABS_API_KEY;
+const apiKey = (process.env.ORVLABS_API_KEY || "").trim();
     const apiUrl = process.env.ORVLABS_API_URL;
 
     if (!apiKey || !apiKey.startsWith("sk_221_pay_test_")) {
