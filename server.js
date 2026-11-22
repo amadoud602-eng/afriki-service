@@ -1,9 +1,6 @@
 const express = require("express");
 
 const app = express();
-app.use(express.raw({ type: "application/json", limit: "20kb" }));
-app.disable("x-powered-by");
-app.use(express.json({ limit: "20kb" }));
 
 const forfaits = [
   {
