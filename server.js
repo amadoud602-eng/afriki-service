@@ -171,7 +171,7 @@ app.post("/api/paiements", async (req, res) => {
 const apiKey = (process.env.ORVLABS_API_KEY || "").trim();
     const apiUrl = process.env.ORVLABS_API_URL;
 
-    if (!apiKey || !apiKey.startsWith("sk_221_pay_test_")) {
+   if (!apiKey) {
       return res.status(503).json({
         erreur: "Clé de paiement de test indisponible"
       });
