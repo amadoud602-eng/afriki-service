@@ -194,7 +194,7 @@ console.log("Adresse API configurée :", Boolean(apiUrl));
         currency: "XOF",
         rail: moyen === "wave" ? "sn_wave" : "sn_orange",
         merchant_reference: reference,
-        return_url: "https://afriki-service.onrender.com/"
+        return_url: "https://afriki-service-1.onrender.com/"
       })
     });
 
