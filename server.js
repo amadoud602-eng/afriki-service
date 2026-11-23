@@ -170,8 +170,7 @@ app.post("/api/paiements", async (req, res) => {
     }
 const apiKey = (process.env.ORVLABS_API_KEY || "").trim();
     const apiUrl = process.env.ORVLABS_API_URL;
-    Invoke-RestMethod -Method Post -Uri "https://afriki-service.onrender.com/api/paiements" -ContentType "application/json" -Body '{"forfait":"jour","moyen":"wave"}'
-
+  
    if (!apiKey) {
       return res.status(503).json({
         erreur: "Clé de paiement de test indisponible"
