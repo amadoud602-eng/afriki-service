@@ -2,6 +2,10 @@ const express = require("express");
 const { createHmac, timingSafeEqual } = require("crypto");
 const { Pool } = require("pg");
 const app = express();
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 app.post("/webhooks/221", express.raw({ type: "application/json" }), (req, res) => {
   const raw = req.body.toString("utf8");
   const timestamp = req.get("X-221-Timestamp");
