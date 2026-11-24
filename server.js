@@ -50,7 +50,7 @@ app.get("/health/db", async (req, res) => {
       heure: result.rows[0].heure
     });
   } catch (error) {
-    console.error("Erreur connexion Neon :", error.message);
+   console.error("Erreur connexion Neon :", error);
     return res.status(503).json({
       database: "disconnected"
     });
