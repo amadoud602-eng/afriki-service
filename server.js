@@ -73,16 +73,16 @@ app.post("/webhooks/221", express.raw({ type: "application/json" }), async (req,
 
     const paiement = await verification.json();
 
-    const resultat = await pool.query(
-      `UPDATE paiements
-       SET statut = $1,
-           date_confirmation = CASE
-             WHEN $1 = 'confirmed' THEN NOW()
-             ELSE date_confirmation
-           END
-       WHERE paiement_id = $2`,
-      [paiement.status, event.object_id]
-    );
+   const resultat = await pool.query(
+  `UPDATE paiements
+   SET statut = $1::varchar(30),
+       date_confirmation = CASE
+         WHEN $1::varchar(30) = 'confirmed' THEN NOW()
+         ELSE date_confirmation
+       END
+   WHERE paiement_id = $2`,
+  [paiement.status, event.object_id]
+);
 
     if (resultat.rowCount === 0) {
       console.error("Paiement introuvable dans Neon");
