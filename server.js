@@ -224,7 +224,19 @@ console.log("Adresse API configurée :", Boolean(apiUrl));
         erreur: "221 Pay n'a pas accepté la demande"
       });
     }
-
+await pool.query(
+  `INSERT INTO paiements
+   (reference, paiement_id, forfait, montant, moyen, statut)
+   VALUES ($1, $2, $3, $4, $5, $6)`,
+  [
+    reference,
+    resultat.id,
+    forfait,
+    plan.prix,
+    moyen,
+    resultat.status || "pending"
+  ]
+);
     return res.json({
       statut: resultat.status,
       paiement: resultat.id,
