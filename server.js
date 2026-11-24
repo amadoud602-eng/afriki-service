@@ -6,8 +6,7 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
-app.post("/webhooks/221", express.raw({ type: "application/json" }), async (req, res) =>
-  {  
+app.post("/webhooks/221", express.raw({ type: "application/json" }), async (req, res) => {  
   const raw = req.body.toString("utf8");
   const timestamp = req.get("X-221-Timestamp");
   const signature = req.get("X-221-Signature");
