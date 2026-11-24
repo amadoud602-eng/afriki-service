@@ -42,6 +42,20 @@ app.post("/webhooks/221", express.raw({ type: "application/json" }), (req, res) 
   }
 });
 app.use(express.json({ limit: "20kb" }));
+app.get("/health/db", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT NOW() AS heure");
+    return res.json({
+      database: "connected",
+      heure: result.rows[0].heure
+    });
+  } catch (error) {
+    console.error("Erreur connexion Neon :", error.message);
+    return res.status(503).json({
+      database: "disconnected"
+    });
+  }
+});
 const forfaits = [
   {
     id: "jour",
