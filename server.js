@@ -6,7 +6,7 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
-app.post("/webhooks/221", express.raw({ type: "application/json" }), async (req, res) => {  
+app.post("/webhooks/221", express.raw({ type: "application/json" }), async (req, res) => {
   const raw = req.body.toString("utf8");
   const timestamp = req.get("X-221-Timestamp");
   const signature = req.get("X-221-Signature");
@@ -35,10 +35,74 @@ app.post("/webhooks/221", express.raw({ type: "application/json" }), async (req,
 
   try {
     const event = JSON.parse(raw);
+
+    if (!event.id || !event.type) {
+      return res.sendStatus(400);
+    }
+
     console.log("Événement 221 Pay reçu :", event.type);
+
+    if (event.type === "test.ping") {
+      return res.sendStatus(200);
+    }
+
+    if (!["payment.succeeded", "payment.failed", "payment.expired"].includes(event.type)) {
+      return res.sendStatus(200);
+    }
+
+    if (!event.object_id) {
+      return res.sendStatus(400);
+    }
+
+    const apiKey = (process.env.ORVLABS_API_KEY || "").trim();
+    const apiUrl = process.env.ORVLABS_API_URL;
+
+    const verification = await fetch(
+      `${apiUrl}/v1/payments/${event.object_id}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${apiKey}`
+        }
+      }
+    );
+
+    if (!verification.ok) {
+      console.error("Vérification 221 Pay impossible :", verification.status);
+      return res.sendStatus(500);
+    }
+
+    const paiement = await verification.json();
+
+    const resultat = await pool.query(
+      `UPDATE paiements
+       SET statut = $1,
+           date_confirmation = CASE
+             WHEN $1 = 'confirmed' THEN NOW()
+             ELSE date_confirmation
+           END
+       WHERE paiement_id = $2`,
+      [paiement.status, event.object_id]
+    );
+
+    if (resultat.rowCount === 0) {
+      console.error("Paiement introuvable dans Neon");
+      return res.sendStatus(500);
+    }
+
+    await pool.query(
+      `INSERT INTO webhook_events (id, type)
+       VALUES ($1, $2)
+       ON CONFLICT (id) DO NOTHING`,
+      [event.id, event.type]
+    );
+
+    console.log("Statut du paiement enregistré :", paiement.status);
+
     return res.sendStatus(200);
-  } catch {
-    return res.sendStatus(400);
+
+  } catch (error) {
+    console.error("Erreur webhook 221 Pay :", error);
+    return res.sendStatus(500);
   }
 });
 app.use(express.json({ limit: "20kb" }));
