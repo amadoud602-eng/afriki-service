@@ -53,7 +53,15 @@ app.post("/webhooks/221", express.raw({ type: "application/json" }), async (req,
     if (!event.object_id) {
       return res.sendStatus(400);
     }
+const dejaTraite = await pool.query(
+  `SELECT id FROM webhook_events WHERE id = $1`,
+  [event.id]
+);
 
+if (dejaTraite.rowCount > 0) {
+  console.log("Événement déjà traité :", event.id);
+  return res.sendStatus(200);
+}
     const apiKey = (process.env.ORVLABS_API_KEY || "").trim();
     const apiUrl = process.env.ORVLABS_API_URL;
 
