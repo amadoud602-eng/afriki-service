@@ -39,17 +39,7 @@ app.post("/webhooks/221", express.raw({ type: "application/json" }), async (req,
     if (!event.id || !event.type) {
       return res.sendStatus(400);
     }
-const dejaTraite = await pool.query(
-  `SELECT id FROM webhook_events WHERE id = $1`,
-  [event.id]
-);
-    console.log("Événement 221 Pay reçu :", event.type);
-
-    if (event.type === "test.ping") {
-      return res.sendStatus(200);
-    }
-
-    if (!["payment.succeeded", "payment.failed", "payment.expired"].includes(event.type)) {
+ if (!["payment.succeeded", "payment.failed", "payment.expired"].includes(event.type)) {
       return res.sendStatus(200);
     }
 
