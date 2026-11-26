@@ -231,7 +231,7 @@ app.get("/conditions", (req, res) => {
       </main>
     </body>
     </html>
-  `);
+  );
 });
 app.get("/health", (req, res) => {
   res.json({
