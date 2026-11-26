@@ -89,7 +89,6 @@ await pool.query(
    WHERE paiement_id = $2`,
   [paiement.status, event.object_id]
 );
-```
 
     if (resultat.rowCount === 0) {
       console.error("Paiement introuvable dans Neon");
