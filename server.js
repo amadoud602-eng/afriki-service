@@ -72,10 +72,9 @@ if (dejaTraite.rowCount > 0) {
       return res.sendStatus(500);
     }
 
-    const paiement = await verification.json();
+  const paiement = await verification.json();
 
-   const resultat = await pool.query(
-await pool.query(
+const resultat = await pool.query(
   `UPDATE paiements
    SET statut = $1::varchar(30),
        date_confirmation = CASE
@@ -89,7 +88,6 @@ await pool.query(
    WHERE paiement_id = $2`,
   [paiement.status, event.object_id]
 );
-
     if (resultat.rowCount === 0) {
       console.error("Paiement introuvable dans Neon");
       return res.sendStatus(500);
