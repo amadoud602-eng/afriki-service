@@ -1,5 +1,5 @@
 const express = require("express");
-const { createHmac, timingSafeEqual } = require("crypto");
+const { createHmac, timingSafeEqual, randomBytes } = require("crypto");
 const { Pool } = require("pg");
 const app = express();
 const pool = new Pool({
