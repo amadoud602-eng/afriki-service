@@ -242,9 +242,6 @@ app.get("/conditions", (req, res) => {
 </html>
   `);
 });
-    </html>
-  );
-});
 app.get("/health", (req, res) => {
   res.json({
     service: "AFRIKI SERVICE",
