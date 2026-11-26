@@ -242,6 +242,28 @@ app.get("/conditions", (req, res) => {
 </html>
   `);
 });
+app.get("/api/mikrotik/ping", (req, res) => {
+  const secret = (process.env.MIKROTIK_POLL_TOKEN || "").trim();
+  const authorization = req.get("Authorization") || "";
+  const token = authorization.replace(/^Bearer\s+/i, "");
+
+  if (!secret) {
+    return res.sendStatus(503);
+  }
+
+  const a = Buffer.from(secret);
+  const b = Buffer.from(token);
+
+  if (a.length !== b.length || !timingSafeEqual(a, b)) {
+    return res.sendStatus(401);
+  }
+
+  return res.json({
+    service: "AFRIKI SERVICE",
+    mikrotik: "authorized",
+    mode: "test"
+  });
+});
 app.get("/health", (req, res) => {
   res.json({
     service: "AFRIKI SERVICE",
