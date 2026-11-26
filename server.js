@@ -75,7 +75,6 @@ if (dejaTraite.rowCount > 0) {
     const paiement = await verification.json();
 
    const resultat = await pool.query(
- ```js
 await pool.query(
   `UPDATE paiements
    SET statut = $1::varchar(30),
