@@ -317,7 +317,52 @@ app.get("/api/mikrotik/tickets", async (req, res) => {
     return res.sendStatus(500);
   }
 });
+app.post("/api/mikrotik/activate", async (req, res) => {
+  const secret = (process.env.MIKROTIK_POLL_TOKEN || "").trim();
+  const authorization = req.get("Authorization") || "";
+  const token = authorization.replace(/^Bearer\s+/i, "");
 
+  const a = Buffer.from(secret);
+  const b = Buffer.from(token);
+
+  if (!secret || a.length !== b.length || !timingSafeEqual(a, b)) {
+    return res.sendStatus(401);
+  }
+
+  const { id, username } = req.body || {};
+
+  if (!id || !username) {
+    return res.status(400).json({ error: "Informations manquantes" });
+  }
+
+  try {
+    const result = await pool.query(
+      `UPDATE paiements
+       SET activation_status = 'activated',
+           activated_at = NOW()
+       WHERE id = $1
+       AND hotspot_username = $2
+       AND activation_status = 'processing'
+       RETURNING id, activation_status`,
+      [id, username]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(409).json({
+        error: "Paiement introuvable ou déjà traité"
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Ticket activé"
+    });
+
+  } catch (error) {
+    console.error("Erreur confirmation activation :", error);
+    return res.sendStatus(500);
+  }
+});
 app.get("/health", (req, res) => {
   res.json({
     service: "AFRIKI SERVICE",
