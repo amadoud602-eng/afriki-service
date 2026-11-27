@@ -242,7 +242,7 @@ app.get("/conditions", (req, res) => {
 </html>
   `);
 });
-app.get("/api/mikrotik/ping});", (req, res) => {
+app.get("/api/mikrotik/ping", (req, res) => {
   const secret = (process.env.MIKROTIK_POLL_TOKEN || "").trim();
   const authorization = req.get("Authorization") || "";
   const token = authorization.replace(/^Bearer\s+/i, "");
@@ -292,6 +292,8 @@ app.get("/api/mikrotik/tickets", async (req, res) => {
     console.error("Erreur récupération ticket :", error);
     return res.sendStatus(500);
   }
+});
+
 app.get("/health", (req, res) => {
   res.json({
     service: "AFRIKI SERVICE",
