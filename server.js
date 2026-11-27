@@ -277,16 +277,40 @@ app.get("/api/mikrotik/tickets", async (req, res) => {
   }
 
   try {
+    const username = "AFR" + randomBytes(6).toString("hex");
+    const password = randomBytes(8).toString("hex");
+
     const result = await pool.query(
-      `SELECT id, reference, forfait, montant
-       FROM paiements
-       WHERE statut = 'confirmed'
-       AND activation_status = 'waiting'
-       ORDER BY date_confirmation ASC
-       LIMIT 1`
+      `WITH prochain AS (
+        SELECT id
+        FROM paiements
+        WHERE statut = 'confirmed'
+        AND (
+          activation_status = 'waiting'
+          OR (
+            activation_status = 'processing'
+            AND activation_claimed_at < NOW() - INTERVAL '2 minutes'
+          )
+        )
+        ORDER BY date_confirmation ASC
+        FOR UPDATE SKIP LOCKED
+        LIMIT 1
+      )
+      UPDATE paiements p
+      SET activation_status = 'processing',
+          activation_claimed_at = NOW(),
+          hotspot_username = COALESCE(p.hotspot_username, $1),
+          hotspot_password = COALESCE(p.hotspot_password, $2)
+      FROM prochain
+      WHERE p.id = prochain.id
+      RETURNING p.id, p.reference, p.forfait, p.montant,
+                p.hotspot_username, p.hotspot_password`,
+      [username, password]
     );
 
-    return res.json(result.rows[0] || { message: "Aucun ticket en attente" });
+    return res.json(
+      result.rows[0] || { message: "Aucun ticket en attente" }
+    );
 
   } catch (error) {
     console.error("Erreur récupération ticket :", error);
