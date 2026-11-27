@@ -242,35 +242,7 @@ app.get("/conditions", (req, res) => {
 </html>
   `);
 });
-app.get("/api/mikrotik/pingapp.get("/api/mikrotik/tickets", async (req, res) => {
-  const secret = (process.env.MIKROTIK_POLL_TOKEN || "").trim();
-  const authorization = req.get("Authorization") || "";
-  const token = authorization.replace(/^Bearer\s+/i, "");
-
-  const a = Buffer.from(secret);
-  const b = Buffer.from(token);
-
-  if (!secret || a.length !== b.length || !timingSafeEqual(a, b)) {
-    return res.sendStatus(401);
-  }
-
-  try {
-    const result = await pool.query(
-      `SELECT id, reference, forfait, montant
-       FROM paiements
-       WHERE statut = 'confirmed'
-       AND activation_status = 'waiting'
-       ORDER BY date_confirmation ASC
-       LIMIT 1`
-    );
-
-    return res.json(result.rows[0] || { message: "Aucun ticket en attente" });
-
-  } catch (error) {
-    console.error("Erreur récupération ticket :", error);
-    return res.sendStatus(500);
-  }
-});", (req, res) => {
+app.get("/api/mikrotik/ping});", (req, res) => {
   const secret = (process.env.MIKROTIK_POLL_TOKEN || "").trim();
   const authorization = req.get("Authorization") || "";
   const token = authorization.replace(/^Bearer\s+/i, "");
